@@ -15,7 +15,10 @@
 
         startBtn.addEventListener("click", async () => {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                const constraints = {
+                    video: { facingMode: "environment" }  // Forces back camera
+                };
+                const stream = await navigator.mediaDevices.getUserMedia(constraints);
                 video.srcObject = stream;
             } catch (error) {
                 console.error("Error accessing webcam: ", error);
