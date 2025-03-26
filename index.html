@@ -4,24 +4,86 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digital Attendance System</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        #startBtn {
+            background-color: #28a745; /* Green */
+        }
+        #stopBtn {
+            background-color: #dc3545; /* Red */
+        }
+        select {
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px;
+        }
+        video {
+            display: block;
+            margin: 20px auto;
+            border: 2px solid black;
+        }
+    </style>
 </head>
 <body>
-    <button id="startBtn">Start</button>
+    <h2>Digital Attendance System</h2>
+
+    <!-- Camera Selection -->
+    <label for="cameraSelect">Choose Camera:</label>
+    <select id="cameraSelect">
+        <option value="user">Front Camera</option>
+        <option value="environment">Back Camera</option>
+    </select>
+
+    <br>
+    
+    <!-- Buttons -->
+    <button id="startBtn">Start Camera</button>
+    <button id="stopBtn">Stop Camera</button>
+
+    <br>
+
+    <!-- Video Stream -->
     <video id="video" width="640" height="480" autoplay></video>
 
     <script>
         const startBtn = document.getElementById("startBtn");
+        const stopBtn = document.getElementById("stopBtn");
         const video = document.getElementById("video");
+        const cameraSelect = document.getElementById("cameraSelect");
+        let stream = null;
 
         startBtn.addEventListener("click", async () => {
             try {
+                const selectedCamera = cameraSelect.value;
                 const constraints = {
-                    video: { facingMode: "environment" }  // Forces back camera
+                    video: { facingMode: selectedCamera }
                 };
-                const stream = await navigator.mediaDevices.getUserMedia(constraints);
+
+                stream = await navigator.mediaDevices.getUserMedia(constraints);
                 video.srcObject = stream;
             } catch (error) {
                 console.error("Error accessing webcam: ", error);
+            }
+        });
+
+        stopBtn.addEventListener("click", () => {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                video.srcObject = null;
             }
         });
     </script>
