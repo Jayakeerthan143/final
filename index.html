@@ -10,28 +10,22 @@
     <script defer src="script.js"></script>
 </head>
 <body>
-    <h2>Digital Attendance System</h2>
-
     <label for="cameraSelect">Choose Camera:</label>
     <select id="cameraSelect">
         <option value="user">Front Camera</option>
         <option value="environment">Back Camera</option>
     </select>
 
-    <br>
-    
-    <button id="startBtn">Start Camera</button>
-    <button id="stopBtn">Stop Camera</button>
-    <button id="captureBtn">Take Picture</button>
-
-    <br>
-
     <div class="video-container">
-        <video id="video" width="640" height="480" autoplay></video>
-        <canvas id="overlayCanvas" width="640" height="480"></canvas>
+        <video id="video" autoplay></video>
+        <canvas id="overlayCanvas"></canvas>
     </div>
 
-    <canvas id="canvas" width="640" height="480" style="display: none;"></canvas>
-    <img id="capturedImage" style="display: none; border: 2px solid black;" />
+    <!-- Button Container for Better Mobile Layout -->
+    <div class="button-container">
+        <button id="startBtn">Start</button>
+        <button id="stopBtn">Stop</button>
+        <button id="captureBtn">Capture</button>
+    </div>
 </body>
 </html>
