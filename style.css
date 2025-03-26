@@ -1,39 +1,13 @@
-/* Center everything */
+/* Full-Screen Video */
 body {
-    text-align: center;
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
     margin: 0;
     padding: 0;
-    overflow: hidden; /* Prevent scrolling */
+    overflow: hidden; /* No scrolling */
+    font-family: Arial, sans-serif;
+    background-color: #000;
 }
 
-/* Buttons */
-button {
-    padding: 10px 20px;
-    margin: 10px;
-    border: none;
-    color: white;
-    cursor: pointer;
-    font-size: 16px;
-    border-radius: 5px;
-    position: absolute;
-    top: 10px;
-}
-#startBtn { background-color: #28a745; left: 10px; } /* Green */
-#stopBtn { background-color: #dc3545; left: 120px; } /* Red */
-#captureBtn { background-color: #007bff; left: 230px; } /* Blue */
-
-/* Camera selector */
-#cameraSelect {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    padding: 10px;
-    font-size: 16px;
-}
-
-/* Full-screen video */
+/* Video Fullscreen */
 .video-container {
     position: fixed;
     top: 0;
@@ -43,19 +17,57 @@ button {
     overflow: hidden;
 }
 
-/* Make the video cover the entire screen */
+/* Make Video Fit Fullscreen */
 video {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Fill screen without distortion */
+    object-fit: cover;
 }
 
-/* Overlay for AR face detection */
+/* Overlay for AR Face Detection */
 #overlayCanvas {
     position: absolute;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    pointer-events: none; /* Don't interfere with interactions */
+    pointer-events: none;
+}
+
+/* Button Container at Bottom */
+.button-container {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    width: 100%;
+}
+
+/* Buttons */
+button {
+    padding: 12px 16px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    color: white;
+    cursor: pointer;
+    flex: 1;
+    max-width: 120px;
+}
+
+/* Different Button Colors */
+#startBtn { background-color: #28a745; } /* Green */
+#stopBtn { background-color: #dc3545; } /* Red */
+#captureBtn { background-color: #007bff; } /* Blue */
+
+/* Camera Select Dropdown */
+#cameraSelect {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    padding: 8px;
+    font-size: 16px;
 }
