@@ -20,6 +20,11 @@ startBtn.addEventListener("click", async () => {
         const selectedCamera = cameraSelect.value;
         const constraints = { video: { facingMode: selectedCamera } };
 
+        // Stop any existing stream
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+        }
+
         stream = await navigator.mediaDevices.getUserMedia(constraints);
         video.srcObject = stream;
 
@@ -29,9 +34,8 @@ startBtn.addEventListener("click", async () => {
             overlayCanvas.height = video.videoHeight;
         };
 
-        loadModel().then(() => {
-            detectFaces();
-        });
+        await loadModel();
+        detectFaces();
     } catch (error) {
         console.error("Error accessing webcam: ", error);
     }
@@ -42,11 +46,14 @@ stopBtn.addEventListener("click", () => {
     if (stream) {
         stream.getTracks().forEach(track => track.stop());
         video.srcObject = null;
+        ctx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height); // Clear AR overlay
     }
 });
 
 // Take Screenshot
 captureBtn.addEventListener("click", () => {
+    if (!stream) return;
+
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
 
@@ -61,13 +68,14 @@ captureBtn.addEventListener("click", () => {
     capturedImage.style.top = "10px";
     capturedImage.style.left = "10px";
     capturedImage.style.border = "2px solid black";
+    capturedImage.style.maxWidth = "200px";
 
     document.body.appendChild(capturedImage);
 });
 
 // Face Detection with AR Overlay
 async function detectFaces() {
-    if (!model) return;
+    if (!model || !stream) return;
 
     const predictions = await model.estimateFaces(video, false);
     ctx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
