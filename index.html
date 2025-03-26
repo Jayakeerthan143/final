@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Attendance System</title>
+</head>
+<body>
+    <button id="startBtn">Start</button>
+    <video id="video" width="640" height="480" autoplay></video>
+
+    <script>
+        const startBtn = document.getElementById("startBtn");
+        const video = document.getElementById("video");
+
+        startBtn.addEventListener("click", async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+            } catch (error) {
+                console.error("Error accessing webcam: ", error);
+            }
+        });
+    </script>
+</body>
+</html>
