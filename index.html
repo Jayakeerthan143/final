@@ -4,41 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digital Attendance System</title>
-    <style>
-        body {
-            text-align: center;
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            padding: 20px;
-        }
-        button {
-            padding: 10px 20px;
-            margin: 10px;
-            border: none;
-            color: white;
-            cursor: pointer;
-            font-size: 16px;
-            border-radius: 5px;
-        }
-        #startBtn { background-color: #28a745; } /* Green */
-        #stopBtn { background-color: #dc3545; } /* Red */
-        #captureBtn { background-color: #007bff; } /* Blue */
-        select {
-            padding: 10px;
-            font-size: 16px;
-            margin: 10px;
-        }
-        video, canvas {
-            display: block;
-            margin: 20px auto;
-            border: 2px solid black;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script>
+    <script defer src="script.js"></script>
 </head>
 <body>
     <h2>Digital Attendance System</h2>
 
-    <!-- Camera Selection -->
     <label for="cameraSelect">Choose Camera:</label>
     <select id="cameraSelect">
         <option value="user">Front Camera</option>
@@ -47,62 +20,18 @@
 
     <br>
     
-    <!-- Buttons -->
     <button id="startBtn">Start Camera</button>
     <button id="stopBtn">Stop Camera</button>
     <button id="captureBtn">Take Picture</button>
 
     <br>
 
-    <!-- Video Stream -->
-    <video id="video" width="640" height="480" autoplay></video>
+    <div class="video-container">
+        <video id="video" width="640" height="480" autoplay></video>
+        <canvas id="overlayCanvas" width="640" height="480"></canvas>
+    </div>
 
-    <!-- Captured Image -->
     <canvas id="canvas" width="640" height="480" style="display: none;"></canvas>
     <img id="capturedImage" style="display: none; border: 2px solid black;" />
-
-    <script>
-        const startBtn = document.getElementById("startBtn");
-        const stopBtn = document.getElementById("stopBtn");
-        const captureBtn = document.getElementById("captureBtn");
-        const video = document.getElementById("video");
-        const canvas = document.getElementById("canvas");
-        const capturedImage = document.getElementById("capturedImage");
-        const cameraSelect = document.getElementById("cameraSelect");
-        let stream = null;
-
-        startBtn.addEventListener("click", async () => {
-            try {
-                const selectedCamera = cameraSelect.value;
-                const constraints = {
-                    video: { facingMode: selectedCamera }
-                };
-
-                stream = await navigator.mediaDevices.getUserMedia(constraints);
-                video.srcObject = stream;
-            } catch (error) {
-                console.error("Error accessing webcam: ", error);
-            }
-        });
-
-        stopBtn.addEventListener("click", () => {
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-                video.srcObject = null;
-            }
-        });
-
-        captureBtn.addEventListener("click", () => {
-            const context = canvas.getContext("2d");
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-            
-            // Convert to image format and display
-            const imageDataUrl = canvas.toDataURL("image/png");
-            capturedImage.src = imageDataUrl;
-            capturedImage.style.display = "block";
-        });
-    </script>
 </body>
 </html>
