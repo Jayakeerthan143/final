@@ -5,27 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digital Attendance System</title>
     <link rel="stylesheet" href="style.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script>
-    <script defer src="script.js"></script>
 </head>
 <body>
-    <label for="cameraSelect">Choose Camera:</label>
-    <select id="cameraSelect">
-        <option value="user">Front Camera</option>
-        <option value="environment">Back Camera</option>
-    </select>
 
-    <div class="video-container">
-        <video id="video" autoplay></video>
-        <canvas id="overlayCanvas"></canvas>
-    </div>
-
-    <!-- Button Container for Better Mobile Layout -->
-    <div class="button-container">
-        <button id="startBtn">Start</button>
+    <button id="startBtn">Start</button>
+    <video id="video" autoplay playsinline></video>
+    <div id="controls">
+        <button id="captureBtn">Take Picture</button>
         <button id="stopBtn">Stop</button>
-        <button id="captureBtn">Capture</button>
     </div>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        const startBtn = document.getElementById("startBtn");
+        const video = document.getElementById("video");
+        const stopBtn = document.getElementById("stopBtn");
+        const captureBtn = document.getElementById("captureBtn");
+        const controls = document.getElementById("controls");
+        const canvas = document.getElementById("canvas");
+
+        let stream = null;
+
+        startBtn.addEventListener("click", async () => {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+                video.style.display = "block";  // Show video
+                startBtn.style.display = "none"; // Hide start button
+                controls.style.display = "flex"; // Show controls
+            } catch (error) {
+                console.error("Error accessing webcam: ", error);
+            }
+        });
+
+        stopBtn.addEventListener("click", () => {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                video.style.display = "none";  // Hide video
+                startBtn.style.display = "block"; // Show start button
+                controls.style.display = "none"; // Hide controls
+            }
+        });
+
+        captureBtn.addEventListener("click", () => {
+            const context = canvas.getContext("2d");
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imageUrl = canvas.toDataURL("image/png");
+            const link = document.createElement("a");
+            link.href = imageUrl;
+            link.download = "screenshot.png";
+            link.click();
+        });
+    </script>
+
 </body>
 </html>
