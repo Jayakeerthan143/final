@@ -11,6 +11,7 @@
     <button id="startBtn">Start</button>
     <video id="video" autoplay playsinline></video>
     <div id="controls">
+        <button id="switchBtn">Switch Camera</button>
         <button id="captureBtn">Take Picture</button>
         <button id="stopBtn">Stop</button>
     </div>
@@ -21,29 +22,43 @@
         const video = document.getElementById("video");
         const stopBtn = document.getElementById("stopBtn");
         const captureBtn = document.getElementById("captureBtn");
+        const switchBtn = document.getElementById("switchBtn");
         const controls = document.getElementById("controls");
         const canvas = document.getElementById("canvas");
 
         let stream = null;
+        let currentFacingMode = "user"; // Default to front camera
 
-        startBtn.addEventListener("click", async () => {
+        async function startCamera() {
             try {
-                stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop()); // Stop existing stream
+                }
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: currentFacingMode }
+                });
                 video.srcObject = stream;
-                video.style.display = "block";  // Show video
-                startBtn.style.display = "none"; // Hide start button
-                controls.style.display = "flex"; // Show controls
+                video.style.display = "block";
+                startBtn.style.display = "none";
+                controls.style.display = "flex";
             } catch (error) {
                 console.error("Error accessing webcam: ", error);
             }
+        }
+
+        startBtn.addEventListener("click", startCamera);
+
+        switchBtn.addEventListener("click", () => {
+            currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
+            startCamera(); // Restart camera with new mode
         });
 
         stopBtn.addEventListener("click", () => {
             if (stream) {
                 stream.getTracks().forEach(track => track.stop());
-                video.style.display = "none";  // Hide video
-                startBtn.style.display = "block"; // Show start button
-                controls.style.display = "none"; // Hide controls
+                video.style.display = "none";
+                startBtn.style.display = "block";
+                controls.style.display = "none";
             }
         });
 
